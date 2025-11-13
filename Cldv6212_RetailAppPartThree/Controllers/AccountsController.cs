@@ -1,5 +1,6 @@
 ﻿using Cldv6212_RetailAppPartThree.Data;
 using Cldv6212_RetailAppPartThree.Models;
+using Cldv6212_RetailAppPartThree.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
