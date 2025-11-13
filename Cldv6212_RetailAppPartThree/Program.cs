@@ -65,7 +65,7 @@ namespace Cldv6212_RetailAppPartThree
             builder.Services.AddSingleton<FileService>(sp =>
             {
                 var connectionString = configuration.GetConnectionString("AzureStorage");
-                return new FileService(connectionString, "diyafileshare");
+                return new FileService(connectionString, "uploads");
             });
 
 
