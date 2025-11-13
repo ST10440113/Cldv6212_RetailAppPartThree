@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Cldv6212_RetailAppPartThree.Models.Customer>
+
+@{
+    ViewData["Title"] = "Customer List";
+}
+<div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="text-center">
+            <h1 class="h3 mb-0 text-white-800">Customer List</h1>
+            <p class="mb-0">Manage your customers effectively.</p>
+        </div>
+
+    </div>
+</div>
+<p>
+    <a asp-action="Create" class="btn btn-outline-light">+ New Customer</a>
+
+</p>
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage
+    </div>
+
+}
+@if (Model != null && Model.Any())
+{
+    <div class="table">
+        <table class="table table-bordered">
+            <thead class="table-dark text-light">
+                <tr>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-black text-white">
+
+                @foreach (var customer in Model)
+                {
+                    <tr>
+                        <td>@customer.FirstName</td>
+                        <td>@customer.LastName</td>
+                        <td>@customer.Email</td>
+                        <td>@customer.PhoneNumber</td>
+                        <td>@customer.Address</td>
+                        <td>
+                            <form asp-action="Delete" method="post" style="display:inline;">
+                                <input type="hidden" name="partitionKey" value="@customer.PartitionKey" />
+                                <input type="hidden" name="rowKey" value="@customer.RowKey" />
+                                <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to delete this customer?');">Delete</button>
+                            </form>
+
+                            <form asp-action="Edit" method="get" style="display:inline;">
+                                <input type="hidden" name="partitionKey" value="@customer.PartitionKey" />
+                                <input type="hidden" name="rowKey" value="@customer.RowKey" />
+                                <button type="submit" class="btn btn-primary">Edit</button>
+                            </form>
+
+                            <form asp-action="Details" method="post" style="display:inline;">
+                                <input type="hidden" name="partitionKey" value="@customer.PartitionKey" />
+                                <input type="hidden" name="rowKey" value="@customer.RowKey" />
+                                <button type="submit" class="btn btn-primary">Details</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info" role="alert">
+        No customers found.
+    </div>
+}
