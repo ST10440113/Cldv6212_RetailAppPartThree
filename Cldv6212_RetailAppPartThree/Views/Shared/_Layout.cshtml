@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,40 +12,97 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Cldv6212_RetailAppPartThree.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-black border-bottom box-shadow small">
+
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Cldv6212_RetailAppPartThree</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                <a class="navbar-brand d-flex align-items-center text-uppercase fw-bold">ABC Retailers</a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        @if (User?.Identity?.IsAuthenticated ?? false)
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-semibold" asp-controller="Customers" asp-action="Index">Customers</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-semibold" asp-controller="Products" asp-action="AdminIndex">Products</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-semibold" asp-controller="Orders" asp-action="Index">Orders</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-semibold" asp-controller="Files" asp-action="Index">Files</a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Customer"))
+                            {
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-semibold" asp-controller="Products" asp-action="UserIndex">Products</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-semibold" asp-controller="Files" asp-action="Index">Files</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white fw-semibold d-flex align-items-center" asp-controller="Cart" asp-action="ViewCart">
+                                        Cart <i class="fas fa-shopping-cart ms-1"></i>
+                                    </a>
+                                </li>
+                            }
+                        }
                     </ul>
+
+
+                    <div class="d-flex align-items-center gap-2">
+                        @if (User?.Identity?.IsAuthenticated ?? false)
+                        {
+                            <span class="text-white small me-2">Hello, @User.Identity!.Name!</span>
+                            <form asp-controller="Accounts" asp-action="Logout" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button class="btn btn-outline-light btn-sm px-3" type="submit">
+                                    Logout <i class="fa fa-sign-out"></i>
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a class="btn btn-outline-info btn-sm px-3" asp-controller="Accounts" asp-action="Login">
+                                Login <i class="fa fa-user ms-1"></i>
+                            </a>
+                            <a class="btn btn-outline-info btn-sm px-3" asp-controller="Accounts" asp-action="Register">
+                                Register
+                            </a>
+                            <a class="btn btn-outline-primary btn-sm px-3" asp-controller="Cart" asp-action="ViewCart">
+                                <i class="fas fa-shopping-cart"></i>
+                            </a>
+                        }
+                    </div>
                 </div>
             </div>
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Cldv6212_RetailAppPartThree - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
+            <div class="container justify-content-center  ">
+                <form asp-controller="Products" asp-action="UserIndex" class="d-flex " style="width: 700px;">
+                    <input type="text" name="SearchString" class="form-control me-3" placeholder="Search for a product..." />
+                    <button type="submit" class="btn btn-outline-light px-4">Filter</button>
+                </form>
+
+            </div>
+        </nav>
+    </header>
+
+
+    <main class="container py-4">
+        @RenderBody()
+    </main>
+
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

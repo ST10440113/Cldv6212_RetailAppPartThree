@@ -1,5 +1,6 @@
 ﻿using Azure;
 using Azure.Data.Tables;
+using Azure.Storage.Blobs;
 using Cldv6212_RetailAppPartThree.Models;
 
 namespace Cldv6212_RetailAppPartThree.Services
